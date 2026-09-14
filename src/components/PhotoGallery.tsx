@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { motion } from 'motion/react';
 import { Camera, Heart, Plus, X, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { GalleryPhoto } from '../types';
 
@@ -60,7 +61,13 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
       className="relative max-w-6xl mx-auto px-4 py-20 z-20"
     >
       {/* Section Header */}
-      <div className="text-center mb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-center mb-16"
+      >
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-pill text-rose-300 text-xs font-sans-clean mb-3">
           <Camera className="w-3.5 h-3.5 text-rose-400" />
           <span>Captured Moments</span>
@@ -83,14 +90,22 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
             <span>Add Our Own Photo</span>
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Polaroid Gallery Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-        {photos.map((photo) => (
-          <div
+        {photos.map((photo, index) => (
+          <motion.div
             key={photo.id}
             id={`gallery-card-${photo.id}`}
+            initial={{ opacity: 0, y: 45 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{
+              duration: 0.65,
+              delay: (index % 3) * 0.12,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
             style={{
               transform: `rotate(${photo.rotation || 0}deg)`,
             }}
@@ -128,7 +143,7 @@ export const PhotoGallery: React.FC<PhotoGalleryProps> = ({
 
             {/* Cute Decorative Tape on Top */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-white/20 backdrop-blur-sm -rotate-2 rounded-sm border-t border-b border-white/30 pointer-events-none" />
-          </div>
+          </motion.div>
         ))}
       </div>
 

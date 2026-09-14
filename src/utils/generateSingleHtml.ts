@@ -208,6 +208,54 @@ export function generateStandaloneHtml(
       transition: all 0.15s ease-out;
     }
 
+    /* Hero Countdown */
+    .hero-countdown {
+      margin: 16px auto 20px;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(251, 113, 133, 0.25);
+      border-radius: 18px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    .countdown-header {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #fda4af;
+      margin-bottom: 8px;
+    }
+    .countdown-digits {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .countdown-unit {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 6px 10px;
+      min-width: 48px;
+      text-align: center;
+    }
+    .countdown-num {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      font-weight: bold;
+      color: #fff1f2;
+      display: block;
+      line-height: 1.1;
+    }
+    .countdown-lbl {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(253, 164, 175, 0.7);
+      display: block;
+    }
+
     /* Timeline */
     .timeline-section { padding: 60px 16px; }
     .section-title {
@@ -227,6 +275,13 @@ export function generateStandaloneHtml(
     .timeline-item {
       position: relative;
       margin-bottom: 36px;
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.75s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .timeline-item.is-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     .timeline-dot {
       position: absolute;
@@ -269,7 +324,13 @@ export function generateStandaloneHtml(
       padding: 16px;
       text-align: center;
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-      transition: transform 0.3s;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.75s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.75s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .polaroid-card.is-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     .polaroid-card:hover { transform: scale(1.03); }
     .polaroid-img {
@@ -353,6 +414,21 @@ export function generateStandaloneHtml(
           "${config.customLetter}"
           ${config.proposerName ? `<div style="text-align:right; margin-top:12px; font-family:'Great Vibes'; font-size:24px; color:#fda4af;">— ${config.proposerName}</div>` : ''}
         </div>
+
+        ${config.showCountdown !== false && config.countdownDate ? `
+        <div class="hero-countdown" id="hero-countdown">
+          <div class="countdown-header">✨ ${config.countdownLabel || 'Counting Down to Our Wedding Day'} 💖</div>
+          <div class="countdown-digits" id="countdown-digits">
+            <div class="countdown-unit"><span class="countdown-num" id="cd-days">00</span><span class="countdown-lbl">Days</span></div>
+            <span style="color:#fda4af; font-weight:bold;">:</span>
+            <div class="countdown-unit"><span class="countdown-num" id="cd-hours">00</span><span class="countdown-lbl">Hours</span></div>
+            <span style="color:#fda4af; font-weight:bold;">:</span>
+            <div class="countdown-unit"><span class="countdown-num" id="cd-mins">00</span><span class="countdown-lbl">Mins</span></div>
+            <span style="color:#fda4af; font-weight:bold;">:</span>
+            <div class="countdown-unit"><span class="countdown-num" id="cd-secs" style="color:#fde047;">00</span><span class="countdown-lbl">Secs</span></div>
+          </div>
+        </div>
+        ` : ''}
 
         <h1 class="proposal-question font-serif">${config.proposalQuestion}</h1>
 
@@ -591,6 +667,49 @@ export function generateStandaloneHtml(
     }
     window.addEventListener('scroll', updateScrollProgress, { passive: true });
     updateScrollProgress();
+
+    // --- 7. Scroll-Triggered Fade-In-Up Animation ---
+    const animatedElements = document.querySelectorAll('.timeline-item, .polaroid-card');
+    if ('IntersectionObserver' in window) {
+      const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            scrollObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      animatedElements.forEach((el) => scrollObserver.observe(el));
+    } else {
+      animatedElements.forEach((el) => el.classList.add('is-visible'));
+    }
+
+    // --- 8. Countdown Timer ---
+    const targetDateStr = "${config.countdownDate || '2027-06-20'}";
+    function updateCountdown() {
+      const targetTime = new Date(targetDateStr).getTime();
+      const diff = targetTime - Date.now();
+      const dEl = document.getElementById('cd-days');
+      const hEl = document.getElementById('cd-hours');
+      const mEl = document.getElementById('cd-mins');
+      const sEl = document.getElementById('cd-secs');
+      if (!dEl || isNaN(targetTime)) return;
+      if (diff <= 0) {
+        const digitsEl = document.getElementById('countdown-digits');
+        if (digitsEl) digitsEl.innerHTML = '<span style="font-family:Playfair Display, serif; font-size:18px; color:#fde047;">💍 Our Forever Journey Has Begun! ✨</span>';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+      dEl.textContent = String(days).padStart(2, '0');
+      hEl.textContent = String(hours).padStart(2, '0');
+      mEl.textContent = String(mins).padStart(2, '0');
+      sEl.textContent = String(secs).padStart(2, '0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   </script>
 </body>
 </html>`;

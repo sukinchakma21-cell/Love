@@ -22,4 +22,7 @@ export interface ProposalConfig {
   customLetter: string;
   proposalQuestion: string;
   specialDate: string;
+  countdownDate?: string;
+  countdownLabel?: string;
+  showCountdown?: boolean;
 }

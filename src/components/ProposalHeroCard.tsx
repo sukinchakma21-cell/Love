@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Sparkles, Gem, ArrowDown, Edit3 } from 'lucide-react';
 import { ProposalConfig } from '../types';
+import { ProposalCountdown } from './ProposalCountdown';
 
 interface ProposalHeroCardProps {
   config: ProposalConfig;
@@ -136,6 +137,14 @@ export const ProposalHeroCard: React.FC<ProposalHeroCardProps> = ({
             </p>
           )}
         </div>
+
+        {/* Countdown to Special Anniversary or Wedding Date */}
+        {config.showCountdown !== false && config.countdownDate && (
+          <ProposalCountdown
+            targetDate={config.countdownDate}
+            label={config.countdownLabel || 'Counting Down to Our Wedding Day'}
+          />
+        )}
 
         {/* The Golden Question: "Will You Marry Me?" */}
         <div className="my-8">

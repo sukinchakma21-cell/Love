@@ -20,6 +20,9 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
   const [customLetter, setCustomLetter] = useState(config.customLetter);
   const [proposalQuestion, setProposalQuestion] = useState(config.proposalQuestion);
   const [specialDate, setSpecialDate] = useState(config.specialDate);
+  const [countdownDate, setCountdownDate] = useState(config.countdownDate || '2027-06-20');
+  const [countdownLabel, setCountdownLabel] = useState(config.countdownLabel || 'Counting Down to Our Wedding Day');
+  const [showCountdown, setShowCountdown] = useState(config.showCountdown !== false);
 
   if (!isOpen) return null;
 
@@ -31,6 +34,9 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
       customLetter,
       proposalQuestion,
       specialDate,
+      countdownDate,
+      countdownLabel,
+      showCountdown,
     });
     onClose();
   };
@@ -160,6 +166,53 @@ export const CustomizerModal: React.FC<CustomizerModalProps> = ({
               placeholder="e.g. September 14, 2026"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/70 border border-white/10 text-rose-100 text-sm focus:border-rose-400 focus:outline-none"
             />
+          </div>
+
+          {/* Countdown Timer Settings */}
+          <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-rose-500/20 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-sans-clean text-rose-100 font-medium flex items-center gap-1.5 cursor-pointer">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Hero Countdown Timer</span>
+              </label>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showCountdown}
+                  onChange={(e) => setShowCountdown(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500"></div>
+              </label>
+            </div>
+
+            {showCountdown && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-[11px] font-sans-clean text-rose-300/80 mb-1">
+                    Countdown Title / Label
+                  </label>
+                  <input
+                    type="text"
+                    value={countdownLabel}
+                    onChange={(e) => setCountdownLabel(e.target.value)}
+                    placeholder="Counting Down to Our Wedding Day"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-rose-100 text-xs focus:border-rose-400 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-sans-clean text-rose-300/80 mb-1">
+                    Target Date
+                  </label>
+                  <input
+                    type="date"
+                    value={countdownDate}
+                    onChange={(e) => setCountdownDate(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-rose-100 text-xs focus:border-rose-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 pt-3">

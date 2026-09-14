@@ -7,6 +7,9 @@ export const initialProposalConfig: ProposalConfig = {
     'From the quiet laughter we share over morning coffee to our midnight walks under starlit skies, every moment with you feels like poetry. You are my home, my peace, and my greatest adventure. Today, with the stars as our witnesses, I want to ask you the simplest yet most sacred question of my entire life...',
   proposalQuestion: 'Will You Marry Me?',
   specialDate: 'September 14, 2026',
+  countdownDate: '2027-06-20',
+  countdownLabel: 'Counting Down to Our Dream Wedding',
+  showCountdown: true,
 };
 
 export const initialTimelineEvents: TimelineEvent[] = [

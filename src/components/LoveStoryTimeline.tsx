@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { Heart, Coffee, Sparkles, Compass, Moon, Camera, Gem, Calendar, Plus, Trash2 } from 'lucide-react';
 import { TimelineEvent } from '../types';
 
@@ -66,7 +67,13 @@ export const LoveStoryTimeline: React.FC<LoveStoryTimelineProps> = ({
       className="relative max-w-4xl mx-auto px-4 py-20 z-20"
     >
       {/* Section Header */}
-      <div className="text-center mb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-center mb-16"
+      >
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-pill text-rose-300 text-xs font-sans-clean mb-3">
           <Heart className="w-3.5 h-3.5 fill-rose-400 text-rose-400" />
           <span>Our Journey Together</span>
@@ -77,7 +84,7 @@ export const LoveStoryTimeline: React.FC<LoveStoryTimelineProps> = ({
         <p className="mt-3 text-sm sm:text-base font-serif-editorial italic text-rose-200/70 max-w-lg mx-auto">
           Every step, every smile, and every gentle whisper that brought us to this magical moment.
         </p>
-      </div>
+      </motion.div>
 
       {/* Timeline Vertical Track */}
       <div className="relative">
@@ -90,9 +97,17 @@ export const LoveStoryTimeline: React.FC<LoveStoryTimelineProps> = ({
             const isEven = index % 2 === 0;
 
             return (
-              <div
+              <motion.div
                 key={item.id}
                 id={`timeline-item-${item.id}`}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{
+                  duration: 0.7,
+                  delay: Math.min(index * 0.1, 0.4),
+                  ease: [0.25, 0.1, 0.25, 1],
+                }}
                 className={`relative flex items-center ${
                   isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'
                 } flex-row pl-12 sm:pl-0 group`}
@@ -145,7 +160,7 @@ export const LoveStoryTimeline: React.FC<LoveStoryTimelineProps> = ({
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
