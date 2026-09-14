@@ -1,0 +1,6 @@
+{
+  "name": "Romantic Proposal",
+  "description": "An enchanting romantic proposal website featuring a starry night sky, floating rose petals, glassmorphism cards, love story timeline, photo gallery, ambient music, and playful proposal interaction.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
